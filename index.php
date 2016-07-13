@@ -113,6 +113,8 @@ curl_close( $ch );
 // --[ cURL POST ]---------------------------------------------------
 // ---------------------------------------------------------------------
 
+$cookie_file = realpath( 'tmp/cookie.txt' );
+
 $config = require_once( 'config.php' );
 
 function request( $url, $postdata = null, $cookiefile = 'tmp/c' ) {
@@ -127,6 +129,9 @@ function request( $url, $postdata = null, $cookiefile = 'tmp/c' ) {
     curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie_file );
     curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookie_file );
 
+    curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+    curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+
     if ( $postdata ) {
         /**
          * Прикрепляем POST поля
@@ -134,13 +139,26 @@ function request( $url, $postdata = null, $cookiefile = 'tmp/c' ) {
          */
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $postdata );
     }
+
+    $html = curl_exec( $ch );
+    curl_close( $ch );
+
+    return $html;
 }
 
 // Очищаем файл
 file_put_contents( 'tmp/cookie.txt', '' );
 
-$html = request('https://www.reddit.com/login');
+$post = array(
+    'op' => 'login',
+    'dest' => 'https//www.reddit.com/',
+    'user' => 'jScheq',
+    'api_type' => 'json'
+);
 
+$html = request( 'https://www.reddit.com/post/login', $post );
+
+echo $html;
 
 
 
