@@ -106,7 +106,48 @@ $html = curl_exec( $ch );
 
 curl_close( $ch );
 
-xprint( $html );
+// xprint( $html );
+
+
+// ---------------------------------------------------------------------
+// --[ cURL POST ]---------------------------------------------------
+// ---------------------------------------------------------------------
+
+$config = require_once( 'config.php' );
+
+function request( $url, $postdata = null, $cookiefile = 'tmp/c' ) {
+
+    $ch = curl_init( $url );
+
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+    // Притворяемся браузером
+    curl_setopt( $ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0' );
+
+    curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie_file );
+    curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookie_file );
+
+    if ( $postdata ) {
+        /**
+         * Прикрепляем POST поля
+         * Принимает либо массив ключ-значение или строку GET
+         */
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $postdata );
+    }
+}
+
+// Очищаем файл
+file_put_contents( 'tmp/cookie.txt', '' );
+
+$html = request('https://www.reddit.com/login');
+
+
+
+
+
+
+
+
 
 
 
