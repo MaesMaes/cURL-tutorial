@@ -6,7 +6,7 @@ require_once 'simple_html_dom.php';
 
 $cookie_file = realpath( 'tmp/cookie.txt' );
 
-function cURL_request( $url, $postdata = null, $cookiefile = 'tmp/c', $proxy = true )
+function cURL_request( $url, $proxy = false, $postdata = null, $cookiefile = 'tmp/c'  )
 {
 
     $ch = curl_init( $url );
